@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    @Autowired
-    UserRepository userRepository;
+    @GetMapping("/reg")
+    public String regist() {
+        return "regist";
+    }
 
-    @GetMapping("/users")
-    public String getAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        return "index";
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello";
     }
 }
