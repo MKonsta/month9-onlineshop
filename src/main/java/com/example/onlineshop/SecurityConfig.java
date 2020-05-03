@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/task/all").fullyAuthenticated();
         http.authorizeRequests().antMatchers("/task/change/**").fullyAuthenticated();
         http.authorizeRequests().antMatchers("/task/desc/**").fullyAuthenticated();
-        http.authorizeRequests().antMatchers("/allUsers").fullyAuthenticated();
+//        http.authorizeRequests().antMatchers("/allUsers").fullyAuthenticated();
 
         // Правило 2: Разрешить всё остальные запросы
         http.authorizeRequests().anyRequest().permitAll();

@@ -3,6 +3,7 @@ package com.example.onlineshop.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 
 @Data
 @Entity
@@ -17,6 +18,7 @@ public class Item {
     @Column(length = 128)
     private String image;
     @Column
+    @Positive
     private Integer price;
     @Column
     private Integer count;

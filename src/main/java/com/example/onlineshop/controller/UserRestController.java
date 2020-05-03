@@ -4,12 +4,13 @@ import com.example.onlineshop.dto.UserDto;
 import com.example.onlineshop.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindException;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserRestController {
@@ -23,8 +24,23 @@ public class UserRestController {
     }
 
     @PostMapping(path = "/addUser", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto addUser(@RequestBody UserDto userDto) {
-        return userService.addUser(userDto);
+    public UserDto addUser(@Valid @RequestBody UserDto userDto ) {
+        try {
+            return userService.addUser(userDto);
+        } catch (Exception ex) {
+            return new UserDto();
+        }
+    }
+
+
+    @ExceptionHandler(BindException.class)
+    private ResponseEntity<?> handleBind(BindException ex) {
+
+        List<Object> list = ex.getFieldErrors().stream()
+                .map(fieldError -> String.format("%s -> %s", fieldError.getField(), fieldError.getDefaultMessage()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.unprocessableEntity().body(list);
     }
 
 }
