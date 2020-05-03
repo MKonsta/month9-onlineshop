@@ -1,50 +1,50 @@
 package com.example.onlineshop;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private DataSource dataSource;
 
     protected void configure(HttpSecurity http) throws Exception{
-        // Правило 1: Всё, что начинается с /subscriptions
-        // должно быть доступно только
-        // после авторизации пользователя
-        http.authorizeRequests().antMatchers("/task/add").fullyAuthenticated();
-        http.authorizeRequests().antMatchers("/task/all").fullyAuthenticated();
-        http.authorizeRequests().antMatchers("/task/change/**").fullyAuthenticated();
-        http.authorizeRequests().antMatchers("/task/desc/**").fullyAuthenticated();
-//        http.authorizeRequests().antMatchers("/allUsers").fullyAuthenticated();
 
-        // Правило 2: Разрешить всё остальные запросы
-        http.authorizeRequests().anyRequest().permitAll();
-
-        // Настраиваем хранение сессий. Не храним сессию.
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-
-        // Используем авторизацию по механизму Http Basic.
-        // Данные пользователя передаются через заголовок запроса
-        http.httpBasic();
-
-        // Так как мы авторизуемся через заголовок запроса, то
-        // форма входа на сайт и выхода с него нам тоже не нужны.
-        http.formLogin().disable().logout().disable();
-
-        // Так как у нас REST сервис, нам не нужна защита от CSRF
         http.csrf().disable();
+
+        http
+                .authorizeRequests()
+                    .antMatchers("/", "/registration").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
+                .and()
+                    .logout()
+                    .permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication()
+                .dataSource(dataSource)
+                .passwordEncoder(NoOpPasswordEncoder.getInstance())
+                .usersByUsernameQuery("select email, password, active from users where email=?")
+                .authoritiesByUsernameQuery("select u.email, ur.roles from users u inner join user_role ur on u.id = ur.user_id where u.email=?");
     }
 }

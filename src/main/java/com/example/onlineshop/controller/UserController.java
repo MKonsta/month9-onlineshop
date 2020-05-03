@@ -9,13 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class UserController {
 
-    @GetMapping("/reg")
+    @GetMapping("/registration")
     public String regist() {
-        return "regist";
+        return "registration";
     }
 
     @GetMapping("/hello")
     public String hello() {
         return "hello";
     }
+
+//    @GetMapping("/login")
+//    public String login() {
+//        return "login";
+//    }
 }

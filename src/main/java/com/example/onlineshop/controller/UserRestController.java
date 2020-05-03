@@ -23,13 +23,9 @@ public class UserRestController {
         return userService.findAllUsers();
     }
 
-    @PostMapping(path = "/addUser", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto addUser(@Valid @RequestBody UserDto userDto ) {
-        try {
+    @PostMapping(path = "/registration" /*consumes = MediaType.APPLICATION_JSON_VALUE*/)
+    public UserDto addUser(/*@Valid @RequestBody */UserDto userDto ) {
             return userService.addUser(userDto);
-        } catch (Exception ex) {
-            return new UserDto();
-        }
     }
 
 

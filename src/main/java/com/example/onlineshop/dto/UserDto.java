@@ -11,7 +11,6 @@ public class UserDto {
     private String fullName;
     @Email
     private String email;
-    @Email
     private String password;
 
     public UserDto(String fullName, String email, String password) {
