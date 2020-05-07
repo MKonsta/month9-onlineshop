@@ -6,5 +6,7 @@
 </head>
 <body>
 <h1>Hello world</h1>
+<form action="/logout" method="post">
+    <input type="submit" value="Sign Out"/>
 </body>
 </html>

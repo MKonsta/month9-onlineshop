@@ -19,7 +19,7 @@ public class User {
     @NotBlank
     private String fullName;
     @Column(length = Integer.MAX_VALUE)
-    @Email
+//    @Email
     private String email;
     @Column(length = Integer.MAX_VALUE)
     private String password;
