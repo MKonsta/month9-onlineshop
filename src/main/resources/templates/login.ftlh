@@ -14,7 +14,7 @@
         <div class="mx-3">
             <form id="login-form" action="/login" method="post">
                 <h3>Вход</h3>
-                <input type="email" name="email" class="form-control mb-1" placeholder="Email"/>
+                <input type="text" name="username" class="form-control mb-1" placeholder="Email"/>
                 <input type="password" name="password" class="form-control mb-1" placeholder="Пароль">
                 <input type="submit" class="btn btn-outline-primary btn-block" value="Sign In">
             </form>
